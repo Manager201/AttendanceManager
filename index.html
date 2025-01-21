@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Manager</title>
+    <style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f7f7f7;
+        display: flex;
+        justify-content: center;
+        align-items: center; /* Change to center the content vertically */
+        flex-direction: column;
+        min-height: 0vh; /* Change to 100vh to fill the screen height */
+        text-align: center; /* Center-align the text */
+    }
+
+    .container {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        max-width: 1200px;
+        padding: 20px;
+        box-sizing: border-box;
+        gap: 20px; /* Added space between boxes */
+        margin-top: 0px; /* Adjust margin to avoid top space */
+    }
+
+    .program-box {
+        background: #ffffff;
+        border-radius: 15px;
+        padding: 20px;
+        margin: 10px;
+        width: 32%; /* Adjust width to 32% for better fit */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+    }
+
+    .program-box:hover {
+        transform: scale(1.05);
+    }
+
+    .program-box h2 {
+        margin-top: 0;
+        color: #333;
+        font-size: 1.6rem;
+    }
+
+    .program-box input {
+        margin: 5px -10px;
+        padding: 10px;
+        font-size: 1rem;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        width: 100%;
+    }
+
+    .program-box button {
+        margin-top: 10px;
+        padding: 10px;
+        font-size: 1rem;
+        border: none;
+        background-color: #28a745;
+        color: white;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    .program-box button:hover {
+        background-color: #218838;
+    }
+
+    .program-box .result {
+        margin-top: 20px;
+        padding: 10px;
+        background-color: #f0f0f0;
+        border-radius: 5px;
+        display: none;
+    }
+
+    .program-box p {
+        margin: 0;
+        font-size: 1rem;
+    }
+
+    /* For mobile responsiveness */
+    @media (max-width: 768px) {
+        .program-box {
+            width: 100%;
+        }
+
+        .container {
+            flex-direction: column;
+            align-items: center;
+        }
+    }
+</style>
+
+</head>
+<body>
+<h1 style="text-align: center; font-size: 2.5rem; color: #a95844; margin-top: 20px;">Attendance Manager</h1>
+
+
+    <div class="container">
+        <!-- Program 1 -->
+        <div class="program-box" id="program1">
+            <h2>Calculate Cumulative Attendance from Old Percentage</h2>
+            <p>Enter the old percentage, total working days till date, current month days, and days attended.</p>
+            <input type="number" id="oldPercentage" placeholder="Enter old percentage" required>
+            <input type="number" id="totalWorkingDays" placeholder="Enter total working days till date" required>
+            <input type="number" id="currentMonthDays" placeholder="Enter total working days this month" required>
+            <input type="number" id="currentMonthAttended" placeholder="Enter days attended this month" required>
+            <button onclick="calculateFromOldPercentage()">Calculate</button>
+            <div class="result" id="result1"></div>
+        </div>
+
+        <!-- Program 3 -->
+        <div class="program-box" id="program3">
+            <h2>Enter Attendance for Multiple Months</h2>
+            <p>Enter attendance data for each month. Type 'stop' to end the input.</p>
+            <input type="text" id="month" placeholder="Enter month (e.g., January)" required>
+            <input type="number" id="workingDays" placeholder="Enter working days" required>
+            <input type="number" id="attendedDays" placeholder="Enter attended days" required>
+            <button onclick="enterAttendanceFromChosenMonth()">Enter Attendance</button>
+            <div class="result" id="result3"></div>
+        </div>
+
+        <!-- Program 2 -->
+        <div class="program-box" id="program2">
+            <h2>Calculate Cumulative Attendance from Days Attended</h2>
+            <p>Enter total working days till now, days attended till now, current month days, and days attended this month.</p>
+            <input type="number" id="previousWorkingDays" placeholder="Enter total working days till now" required>
+            <input type="number" id="previousAttendedDays" placeholder="Enter days attended till now" required>
+            <input type="number" id="currentMonthDays2" placeholder="Enter total working days this month" required>
+            <input type="number" id="currentMonthAttended2" placeholder="Enter days attended this month" required>
+            <button onclick="calculateFromDaysAttended()">Calculate</button>
+            <div class="result" id="result2"></div>
+        </div>
+    </div>
+
+    <script>
+        // Calculate from old percentage
+        function calculateFromOldPercentage() {
+            let oldPercentage = document.getElementById("oldPercentage").value;
+            let totalWorkingDays = document.getElementById("totalWorkingDays").value;
+            let currentMonthDays = document.getElementById("currentMonthDays").value;
+            let currentMonthAttended = document.getElementById("currentMonthAttended").value;
+
+            if (currentMonthAttended > currentMonthDays) {
+                alert("Invalid input: attended days cannot exceed working days in the month.");
+                return;
+            }
+
+            let totalAttended = (oldPercentage / 100) * totalWorkingDays + Number(currentMonthAttended);
+            let newTotalWorkingDays = Number(totalWorkingDays) + Number(currentMonthDays);
+            let newPercentage = (totalAttended / newTotalWorkingDays) * 100;
+
+            document.getElementById("result1").style.display = "block";
+            document.getElementById("result1").innerHTML = `New Attendance Percentage: ${newPercentage.toFixed(2)}%`;
+        }
+
+        // Calculate from days attended
+        function calculateFromDaysAttended() {
+            let previousWorkingDays = document.getElementById("previousWorkingDays").value;
+            let previousAttendedDays = document.getElementById("previousAttendedDays").value;
+            let currentMonthDays = document.getElementById("currentMonthDays2").value;
+            let currentMonthAttended = document.getElementById("currentMonthAttended2").value;
+
+            if (currentMonthAttended > currentMonthDays) {
+                alert("Invalid input: attended days cannot exceed working days in the month.");
+                return;
+            }
+
+            let totalWorkingDays = Number(previousWorkingDays) + Number(currentMonthDays);
+            let totalAttended = Number(previousAttendedDays) + Number(currentMonthAttended);
+            let newPercentage = (totalAttended / totalWorkingDays) * 100;
+
+            document.getElementById("result2").style.display = "block";
+            document.getElementById("result2").innerHTML = `New Attendance Percentage: ${newPercentage.toFixed(2)}%`;
+        }
+
+        // Enter attendance for multiple months
+        function enterAttendanceFromChosenMonth() {
+            let month = document.getElementById("month").value;
+            let workingDays = document.getElementById("workingDays").value;
+            let attendedDays = document.getElementById("attendedDays").value;
+
+            if (attendedDays > workingDays) {
+                alert("Invalid input: attended days cannot exceed working days in the month.");
+                return;
+            }
+
+            document.getElementById("result3").style.display = "block";
+            document.getElementById("result3").innerHTML = `Attendance for ${month}: ${attendedDays}/${workingDays} days attended.`;
+        }
+
+        // Make the input fields auto-focus to next input after pressing Enter
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    let nextInput = input.nextElementSibling;
+                    if (nextInput && nextInput.tagName === 'INPUT') {
+                        nextInput.focus();
+                    } else {
+                        let nextButton = input.closest('.program-box').querySelector('button');
+                        if (nextButton) nextButton.focus();
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
