@@ -24,13 +24,29 @@
     }
 
     /* Cropping the view of iframe */
-    iframe {
-        clip-path: inset(104px 0px 0px 56px); /* top, right, bottom, left */
-    }
+  
     </style>
 </head>
 <body>
     <h1>Running Attendance Manager</h1>
     <iframe src="https://www.programiz.com/online-compiler/14Xcn7Kogw67B"></iframe>
+    <script>
+        // JavaScript to hide specific elements inside the iframe
+        const iframe = document.getElementById("compiler-iframe");
+        iframe.onload = () => {
+            try {
+                // Access iframe's document
+                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+
+                // Find the element and hide it
+                const aceScroller = iframeDoc.querySelector(".ace_scroller");
+                if (aceScroller) {
+                    aceScroller.style.display = "none";
+                }
+            } catch (error) {
+                console.error("Unable to access iframe content due to cross-origin restrictions.");
+            }
+        };
+    </script>
 </body>
 </html>
